@@ -7,7 +7,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 
-
+# mapped -> type hint for python
+# mapped_column -> creates a sql database column
 class JobApplication(Base):
 
     __tablename__ = "job_applications"
