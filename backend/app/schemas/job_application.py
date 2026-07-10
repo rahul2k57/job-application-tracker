@@ -41,16 +41,6 @@ class JobApplicationUpdate(BaseModel):
     deadline: datetime | None = None
     status: ApplicationStatus | None = None
 
-class JobApplicationResponse(JobApplicationBase):
-
-    id: int
-    status: ApplicationStatus
-    applied_date: datetime
-    user_id: int
-
-    model_config = ConfigDict(
-        from_attributes=True
-    )
 
 class JobApplicationCreate(BaseModel):
     company: str
@@ -69,6 +59,7 @@ class JobApplicationResponse(BaseModel):
     notes: str | None
     applied_date: datetime
     deadline: datetime | None
+    resume_url: str | None = None
     model_config = ConfigDict(
         from_attributes=True
     )

@@ -1,16 +1,31 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 from app.models.user import User
 from fastapi import UploadFile, HTTPException, status
 from fastapi.responses import FileResponse
+from app.models.job_application import JobApplication
 import os
 MAX_FILE_SIZE = 5 * 1024 * 1024
 UPLOAD_DIR = "uploads/resumes"
 
 def upload_resume(
         db:Session,
+        application_id:int,
         current_user:User,
         file: UploadFile,
 ):
+    stmt = select(JobApplication).where(
+    JobApplication.id == application_id,
+    JobApplication.user_id == current_user.id,
+    )
+    application = db.scalars(stmt).first()
+
+    if not application:
+        raise HTTPException(
+    status_code=status.HTTP_404_NOT_FOUND,
+    detail="Job Application Not Found!",
+    )
+
     if not file.filename:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -38,41 +53,54 @@ def upload_resume(
         UPLOAD_DIR,
         exist_ok=True,
     )
-    file_name = f"user_{current_user.id}_resume.pdf"
+    file_name = f"application_{application.id}_resume.pdf"
 
     file_path = os.path.join(UPLOAD_DIR,file_name,)
 
     with open(file_path,"wb") as resume:
         resume.write(file_contents)
     
-    current_user.resume_url = os.path.join(UPLOAD_DIR,file_name,)
+    application.resume_url = os.path.join(UPLOAD_DIR,file_name,)
     db.commit()
-    db.refresh(current_user)
+    db.refresh(application)
 
     return {
         "message": "Resume Uploaded Successfully",
-        "resume_url": current_user.resume_url,
+        "resume_url": application.resume_url,
     }
 
 
 def get_resume(
         db:Session,
+        application_id:int,
         current_user: User,
 ):
-    if not current_user.resume_url:
+    stmt = select(JobApplication).where(
+    JobApplication.id == application_id,
+    JobApplication.user_id == current_user.id,
+)
+    application = db.scalars(stmt).first()
+
+    if not application:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Job Application Not Found!",
+        )
+
+    if not application.resume_url:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="No Resume Found!",
         )
     
-    if not os.path.exists(current_user.resume_url):
+    if not os.path.exists(application.resume_url):
         raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail="Resume file not found."
     )
 
     return FileResponse(
-    path=current_user.resume_url,
-    filename=f"user_{current_user.id}_resume.pdf",
+    path=application.resume_url,
+    filename=f"application_{application.id}_resume.pdf",
     media_type="application/pdf",
 )

@@ -37,11 +37,6 @@ class User(Base):
         DateTime(timezone=True),
         default=lambda : datetime.now(UTC),
     )
-    
-    resume_url: Mapped[str | None] = mapped_column(
-        String(255),
-        nullable=True,
-    )
     applications: Mapped[list["JobApplication"]] = relationship(
         back_populates = "user"
     )

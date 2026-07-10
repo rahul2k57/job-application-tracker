@@ -8,6 +8,8 @@ from app.routers import job_application
 
 from app.routers import dashboard
 
+from app.routers import resume
+
 app = FastAPI()
 
 origins = [
@@ -27,6 +29,8 @@ app.include_router(auth.router)
 app.include_router(job_application.router)
 
 app.include_router(dashboard.router)
+
+app.include_router(resume.router)
 
 @app.get("/")
 def home():

@@ -63,6 +63,12 @@ class JobApplication(Base):
     user: Mapped["User"] = relationship(
         back_populates="applications"
     )
+
+    resume_url: Mapped[str | None] = mapped_column(
+    String(500),
+    nullable=True,
+    )
     status_history: Mapped[list["StatusHistory"]] = relationship(
-        back_populates="application"
+        back_populates="application",
+        cascade="all, delete-orphan",
     ) 

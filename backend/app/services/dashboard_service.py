@@ -26,6 +26,7 @@ def get_dashboard_summary(
         select(
                 func.count().label("total_applications"),
                 status_count(ApplicationStatus.APPLIED).label("applied"),
+                status_count(ApplicationStatus.OA).label("online_assessment"),
                 status_count(ApplicationStatus.INTERVIEW).label("interview"),
                 status_count(ApplicationStatus.OFFER).label("offer"),
                 status_count(ApplicationStatus.REJECTED).label("rejected"),
@@ -40,6 +41,7 @@ def get_dashboard_summary(
         return DashboardSummaryResponse(
         total_applications=result.total_applications,
         applied=result.applied,
+        online_assessment=result.online_assessment,
         interview=result.interview,
         offer=result.offer,
         rejected=result.rejected,
@@ -74,7 +76,7 @@ def get_upcoming_deadlines(
                 JobApplication.user_id == current_user.id,
                 JobApplication.deadline >= today,
                 JobApplication.deadline.is_not(None))
-                .order_by(JobApplication.deadline.desc())
+                .order_by(JobApplication.deadline.asc())
                 .limit(UPCOMING_APPLICATION_LIMIT)
         )
         applications = db.scalars(stmt).all()
