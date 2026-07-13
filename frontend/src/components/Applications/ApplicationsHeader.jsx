@@ -1,57 +1,32 @@
 import SortControls from "./SortControls";
-function ApplicationsHeader({search, setSearch, status, setStatus, sortBy,setSortBy,sortOrder, setSortOrder,handleAddApplication}) {
+
+function ApplicationsHeader({ search, setSearch, status, setStatus, sortBy, setSortBy, sortOrder, setSortOrder, handleAddApplication }) {
     return (
         <div className="mb-6">
-
-            {/* First Row */}
-            <div className="flex justify-between items-center mb-4">
-
-                <h1 className="text-3xl font-bold">
+            <div className="flex justify-between items-center mb-5">
+                <h1 className="text-2xl font-semibold text-slate-800">
                     Applications
                 </h1>
-
                 <button
-                onClick={handleAddApplication}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                    onClick={handleAddApplication}
+                    className="bg-indigo-600 text-white text-sm font-medium px-4 py-2.5 rounded-md hover:bg-indigo-700 transition duration-150"
                 >
                     + Add Application
                 </button>
-
             </div>
 
-            {/* Second Row */}
-            <div className="flex justify-between items-center gap-4">
-
+            <div className="flex items-center gap-3">
                 <input
                     type="text"
                     placeholder="Search by company or role..."
                     value={search}
-                    onChange={(event)=>setSearch(event.target.value)}   
-                    className="
-                        flex-1
-                        border
-                        border-gray-300
-                        rounded-lg
-                        px-4
-                        py-2
-                        focus:outline-none
-                        focus:ring-2
-                        focus:ring-blue-500
-                    "
+                    onChange={(event) => setSearch(event.target.value)}
+                    className="flex-1 border border-slate-300 rounded-md px-4 py-2.5 text-base text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
                 />
-                <div className="flex items-end gap-4">
                 <select
                     value={status}
-                    onChange={(event) => {
-                        setStatus(event.target.value);
-                        }}
-                    className="
-                        border
-                        border-gray-300
-                        rounded-lg
-                        px-3
-                        py-2
-                    "
+                    onChange={(event) => setStatus(event.target.value)}
+                    className="border border-slate-300 rounded-md px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                 >
                     <option value="">All Status</option>
                     <option value="Applied">Applied</option>
@@ -68,8 +43,6 @@ function ApplicationsHeader({search, setSearch, status, setStatus, sortBy,setSor
                     setSortOrder={setSortOrder}
                 />
             </div>
-            </div>
-
         </div>
     );
 }

@@ -1,22 +1,12 @@
-function SummaryCard({ title, value }) {
+function SummaryCard({ title, value, color }) {
+    const valueColor = color || "text-slate-800";
     return (
-        <div
-            className="
-                bg-white
-                rounded-xl
-                shadow
-                p-6
-                flex
-                flex-col
-                justify-center
-            "
-        >
-            <p className="text-sm text-gray-500">
+        <div className="bg-white border border-slate-200 rounded-lg p-6">
+            <p className="text-sm font-medium text-slate-400 uppercase tracking-wider">
                 {title}
             </p>
-
-            <p className="text-3xl font-bold mt-2">
-                {value}
+            <p className={`text-4xl font-semibold mt-3 ${valueColor}`}>
+                {value ?? "-"}
             </p>
         </div>
     );

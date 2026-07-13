@@ -1,44 +1,14 @@
-import Sidebar from "../components/Sidebar";
-import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 function AppLayout({ children }) {
-    const navigate = useNavigate();
-
-    function handleLogout() {
-    localStorage.removeItem("token");
-    navigate("/login");
-}
     return (
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-slate-50">
 
-            {/* Sidebar */}
-            <Sidebar />
+            <Navbar />
 
-            {/* Right Side */}
-            <div className="flex-1">
-
-                {/* Navbar */}
-                <div className="h-16 bg-white border-b shadow-sm flex items-center justify-between px-6">
-
-                    <h1 className="text-xl font-semibold">
-                        Job Application Tracker
-                    </h1>
-
-                    <button
-                        onClick={handleLogout}
-                        className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
-                    >
-                        Logout
-                    </button>
-
-                </div>
-
-                {/* Page Content */}
-                <div className="p-6">
-                    {children}
-                </div>
-
-            </div>
+            <main className="max-w-7xl mx-auto px-8 py-8">
+                {children}
+            </main>
 
         </div>
     );
