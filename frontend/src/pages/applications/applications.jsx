@@ -116,6 +116,7 @@ useEffect(() => {
     <ViewApplicationModal
         application={selectedApplication}
         setShowViewModal={setShowViewModal}
+        refreshApplications={fetchApplications}
     />
 )}
 

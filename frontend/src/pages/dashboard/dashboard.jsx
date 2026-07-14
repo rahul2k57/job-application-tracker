@@ -4,7 +4,7 @@ import AppLayout from "../../layouts/AppLayout";
 import SummaryCards from "../../components/Dashboard/SummaryCards";
 import RecentApplications from "../../components/Dashboard/RecentApplications";
 import UpcomingDeadlines from "../../components/Dashboard/UpcomingDeadlines";
-
+import { handleApiError } from "../../utils/handleApiError";
 function Dashboard() {
     const [summary, setSummary] = useState(null);
     const [recentApplications, setRecentApplications] = useState([]);
@@ -15,7 +15,7 @@ function Dashboard() {
             const response = await api.get("/dashboard");
             setSummary(response.data);
         } catch (error) {
-            console.error(error);
+            handleApiError(error);
         }
     }
 
@@ -24,7 +24,7 @@ function Dashboard() {
             const response = await api.get("/dashboard/recent-applications");
             setRecentApplications(response.data);
         } catch (error) {
-            console.error(error);
+            handleApiError(error);
         }
     }
 
@@ -33,7 +33,7 @@ function Dashboard() {
             const response = await api.get("/dashboard/recent-deadlines");
             setUpcomingDeadlines(response.data);
         } catch (error) {
-            console.error(error);
+            handleApiError(error);
         }
     }
 

@@ -38,20 +38,15 @@ function ResumeSection({ application, onUploadSuccess }) {
     }
 
     async function handleDownloadResume() {
-        try {
-            const response = await api.get(`/resume/${application.id}`, { responseType: "blob" });
-            const url = window.URL.createObjectURL(response.data);
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = `application_${application.id}_resume.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            window.URL.revokeObjectURL(url);
-        } catch (error) {
-            handleApiError(error);
-        }
+    try {
+        const response = await api.get(`/resume/${application.id}`);
+
+        window.open(response.data.download_url, "_blank");
+
+    } catch (error) {
+        handleApiError(error);
     }
+}
 
     return (
         <div className="border-t border-slate-100 pt-5">

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ResumeSection from "./ResumeSection";
 import api from "../../api/axios";
+import { handleApiError } from "../../utils/handleApiError";
 
 const statusStyles = {
     "Applied":           "bg-slate-100 text-slate-700",
@@ -11,7 +12,7 @@ const statusStyles = {
     "Withdrawn":         "bg-slate-100 text-slate-500",
 };
 
-function ViewApplicationModal({ application, setShowViewModal }) {
+function ViewApplicationModal({ application, setShowViewModal, refreshApplications }) {
     const [statusHistory, setStatusHistory] = useState([]);
     const [applicationData, setApplicationData] = useState(application);
 
@@ -19,8 +20,9 @@ function ViewApplicationModal({ application, setShowViewModal }) {
         try {
             const response = await api.get(`/applications/${application.id}`);
             setApplicationData(response.data);
+            await refreshApplications();
         } catch (error) {
-            console.error(error);
+            handleApiError(error);
         }
     }
 
@@ -29,7 +31,7 @@ function ViewApplicationModal({ application, setShowViewModal }) {
             const response = await api.get(`/applications/${application.id}/history`);
             setStatusHistory(response.data);
         } catch (error) {
-            console.error(error);
+            handleApiError(error);
         }
     }
 

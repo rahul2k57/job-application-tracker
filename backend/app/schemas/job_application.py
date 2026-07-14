@@ -42,14 +42,6 @@ class JobApplicationUpdate(BaseModel):
     status: ApplicationStatus | None = None
 
 
-class JobApplicationCreate(BaseModel):
-    company: str
-    role: str
-    job_link: str | None = None
-    status:ApplicationStatus = ApplicationStatus.APPLIED
-    notes: str | None = None
-    applied_date: datetime | None = None
-
 class JobApplicationResponse(BaseModel):
     id: int
     company: str
@@ -63,15 +55,6 @@ class JobApplicationResponse(BaseModel):
     model_config = ConfigDict(
         from_attributes=True
     )
-
-class JobApplicationUpdate(BaseModel):
-    company: str | None = None
-    role: str | None = None
-    job_link: str | None = None
-    status: ApplicationStatus | None = None
-    notes: str | None = None
-    applied_date: datetime | None = None
-    deadline: datetime | None = None
 
 class JobApplicationFilter(BaseModel):
     company: str | None = None

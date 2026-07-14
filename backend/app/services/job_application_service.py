@@ -11,6 +11,9 @@ from app.schemas.job_application import JobApplicationCreate, JobApplicationUpda
 
 from app.enum import SortOrder
 
+from app.services.s3_service import delete_file
+from app.exceptions.s3_exceptions import S3DeleteError
+
 def create_job_application(
     db: Session,
     application_data: JobApplicationCreate,
@@ -36,11 +39,7 @@ def create_job_application(
     job_link=application_data.job_link,
     status=application_data.status,
     notes=application_data.notes,
-    applied_date=(
-        application_data.applied_date
-        if application_data.applied_date
-        else datetime.now(UTC)
-    ),
+    applied_date=datetime.now(UTC),
     user_id=current_user.id,
     )
     db.add(job_application)
@@ -205,16 +204,27 @@ def delete_job_application(
         JobApplication.id == application_id,
         JobApplication.user_id == current_user.id,
     )
+
     application = db.scalars(stmt).first()
 
-    if not application :
+    if not application:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Application Not Found !",
+            detail="Application Not Found!",
         )
-    
-    db.delete(application)
-    db.commit()
+
+    try:
+        if application.resume_url:
+            delete_file(application.resume_url)
+
+        db.delete(application)
+        db.commit()
+
+    except S3DeleteError:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete resume from cloud storage.",
+        )
 
     return application
 

@@ -2,11 +2,14 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 from app.models.user import User
 from fastapi import UploadFile, HTTPException, status
-from fastapi.responses import FileResponse
 from app.models.job_application import JobApplication
-import os
+
+import uuid
+from app.services.s3_service import upload_file,delete_file,generate_presigned_url
+from app.exceptions.s3_exceptions import S3UploadError,S3DeleteError,S3DownloadError
+
 MAX_FILE_SIZE = 5 * 1024 * 1024
-UPLOAD_DIR = "uploads/resumes"
+
 
 def upload_resume(
         db:Session,
@@ -49,18 +52,26 @@ def upload_resume(
         )
     
 
-    os.makedirs(
-        UPLOAD_DIR,
-        exist_ok=True,
+    object_key = (
+        f"resumes/{application.id}/{uuid.uuid4()}.pdf"
     )
-    file_name = f"application_{application.id}_resume.pdf"
-
-    file_path = os.path.join(UPLOAD_DIR,file_name,)
-
-    with open(file_path,"wb") as resume:
-        resume.write(file_contents)
+    old_resume = application.resume_url
+    try:
+        
+        upload_file(
+            file_contents=file_contents,
+            object_key=object_key,
+            )
+        if old_resume:
+            delete_file(old_resume)
+        application.resume_url = object_key
     
-    application.resume_url = os.path.join(UPLOAD_DIR,file_name,)
+    except (S3UploadError, S3DeleteError):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to upload resume."
+        )
+
     db.commit()
     db.refresh(application)
 
@@ -93,14 +104,15 @@ def get_resume(
             detail="No Resume Found!",
         )
     
-    if not os.path.exists(application.resume_url):
+    try:
+        download_url = generate_presigned_url(application.resume_url)
+        return {
+            "download_url":download_url
+        }
+    except S3DownloadError:
         raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail="Resume file not found."
-    )
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to generate download link."
+        )
 
-    return FileResponse(
-    path=application.resume_url,
-    filename=f"application_{application.id}_resume.pdf",
-    media_type="application/pdf",
-)
+    
