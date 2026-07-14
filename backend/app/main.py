@@ -36,6 +36,3 @@ app.include_router(resume.router)
 def home():
     return {"Message : Job Tracker API"}
 
-@app.get("/test")
-def test():
-    return{"Message: Hello from Fastapi"}
