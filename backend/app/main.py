@@ -14,6 +14,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",
+    "https://job-application-tracker-frontend-one.vercel.app",
 ]
 
 app.add_middleware(
