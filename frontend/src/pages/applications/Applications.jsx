@@ -7,7 +7,7 @@ import ApplicationRow from "../../components/Applications/ApplicationRow";
 import AddApplicationModal from "../../components/Applications/AddApplicationModal";
 import DeleteConfirmationModal from "../../components/Applications/DeleteConfirmModal";
 import ViewApplicationModal from "../../components/Applications/ViewApplicationModal";
-import Pagination from "../../components/pagination";
+import Pagination from "../../components/Pagination";
 import SortControls from "../../components/Applications/SortControls";
 
 function Applications(){
