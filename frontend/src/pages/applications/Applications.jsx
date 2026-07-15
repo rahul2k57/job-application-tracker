@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../../api/axios";
-import AppLayout from "../../layouts/Applayout";
+import AppLayout from "../../layouts/AppLayout";
 import ApplicationsHeader from "../../components/Applications/ApplicationsHeader";
 import ApplicationsTable from "../../components/Applications/ApplicationsTable";
 import ApplicationRow from "../../components/Applications/ApplicationRow";
