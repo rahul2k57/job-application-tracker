@@ -48,16 +48,18 @@ It provides an easy way to keep track of the application process, stay organized
 ##  System Architecture
 
 ```mermaid
-graph TB
-    A[User] --> B[React Frontend <br/> Vercel]
-    B --> C[FastAPI Backend <br/> Render]
-    C --> D[(Neon PostgreSQL)]
-    C --> E[AWS S3 Bucket]
+graph LR
+    A[User] --> B[React Frontend]
+    B -->|REST API| C[FastAPI Backend]
+
+    C -->|SQLAlchemy ORM| D[(Neon PostgreSQL)]
+    C -->|Upload / Download Resume| E[AWS S3]
+
+    C -->|JWT Authentication| F[Authentication]
+    C -->|Alembic Migrations| G[Database Schema]
 
     D --> C
     E --> C
-    C --> B
-    B --> A
 ```
  
 
