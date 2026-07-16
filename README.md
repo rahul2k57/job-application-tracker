@@ -52,7 +52,7 @@ graph LR
     A[User] --> B[React Frontend<br/>Vercel]
     B -->|REST API| C[FastAPI Backend<br/>Render]
 
-    C -->|JWT Authentication| C
+    C --> F[JWT Authentication]
     C -->|SQLAlchemy ORM| D[(Neon PostgreSQL)]
     C -->|Upload / Download Resume| E[AWS S3]
 
